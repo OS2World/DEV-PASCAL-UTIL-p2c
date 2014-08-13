@@ -1,0 +1,162 @@
+p2c - PASCAL to C translator - OS/2 2.0 version for gcc/emx 0.8f
+================================================================
+
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation (any version).
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License (.\src\copying) for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+The GNU License Agreement restrictions do _not_ apply to code generated
+by p2c, nor to the p2c run-time files "p2clib.c" and "p2c.h".
+
+
+1. Introduction
+===============
+
+This package contains p2c, a PASCAL to C translator, compiled for OS/2 v 2.0
+using the GNU gcc v 2.3.3 compiler, which was ported to OS/2 by Eberhard
+Mattes (gcc/emx 0.8f). Support library for this GNU gcc port is provided.
+
+-----------------------------------------------------------------------------
+
+PLEASE NOTE:
+
+IF YOU ARE USING A DIFFERENT VERSION OF GCC/EMX, YOU SHOULD RECOMPILE
+THE P2C SOURCE CODE USING YOUR VERSION OF GCC/EMX IN ORDER TO AVOID
+PROBLEMS DUE TO POSSIBLE CHANGES IN THE HEADER FILES OR THE C LIBRARY OF 
+GCC/EMX.
+
+How to compile the p2c source code:
+
+1. cd distrib\src
+2. nmake
+3. replace distrib\os2\p2c.exe  by the new distrib\src\p2c.exe
+4. replace distrib\os2\libp2c.a by the new distrib\src\libp2c.a
+5. install p2c as described in '2. Installation', but DO NOT replace your
+   \emx\lib\emx.dll by distrib\os2\emx.dll
+
+-----------------------------------------------------------------------------
+
+Original source code for p2c is available from aix370.rrz.uni-koeln.de
+in file /.disk2/programming/languages/pascal/p2c-1.20.tar.Z.
+
+gcc/emx is available from rusmv1.rus.uni-stuttgart.de in directory
+/soft/os2/emx-0.8f.
+
+Using p2c, a PASCAL program can be translated into C and can then be compiled
+using gcc/emx. Information about supported PASCAL dialects is contained in
+file .\os2\p2c.doc.
+
+This package contains, in addition to this file, the following files:
+
+readme              -- general information about p2c
+.\hp\import\*.imp   -- for HP PASCAL Workstation System users only:
+                       import files for p2c; place in \emx\p2c
+.\hp\include\*.h    -- for HP PASCAL Workstation System users only:
+                       include files; place in \emx\include
+.\examples\*.*      -- sample PASCAL programs, see .\examples\readme
+.\examples\c\*.c    -- pre-translated sample programs
+.\src\*.*           -- source code for OS/2 port of p2c
+.\os2\copying       -- GNU General Public license
+.\os2\emx.dll       -- emx dynamic link library
+.\os2\libp2c.a      -- p2c library for gcc/emx C compilation
+.\os2\loc.p2c       -- local configuration file for p2c
+.\os2\p2c.doc       -- human readable UNIX manual page
+.\os2\p2c.exe       -- PASCAL to C translator
+.\os2\p2c.h         -- C header file needed for C compilation
+.\os2\p2crc         -- configuration file for p2c
+.\os2\readme        -- general information about p2c
+.\os2\string.pas    -- Oregon Software Pascal dynamic string package
+.\os2\system.imp    -- declarations for Pascal built-in objects
+.\os2\system.m2     -- declarations for Modula-2 built-in objects
+.\os2\turbo.imp     -- INCOMPLETE Turbo Pascal standard units
+
+
+2. Installation
+===============
+
+After unpacking the archive in any convenient subdirectory, the various 
+files should be installed as follows:
+
+.\os2\copying       -- place in directory \emx\p2c
+.\os2\emx.dll       -- must be accessible via LIBPATH (LIBPATH-statement in
+                       CONFIG.SYS); normally in directory \emx\dll
+.\os2\libp2c.a      -- place in directory \emx\lib
+.\os2\loc.p2c       -- place in directory \emx\p2c
+.\os2\p2c.doc       -- place in directory \emx\p2c
+.\os2\p2c.exe       -- place in directory \emx\bin
+.\os2\p2c.h         -- place in directory \emx\include
+.\os2\p2crc         -- place in directory \emx\p2c
+.\os2\readme        -- place in directory \emx\p2c
+.\os2\string.pas    -- place in directory \emx\p2c
+.\os2\system.imp    -- place in directory \emx\p2c
+.\os2\system.m2     -- place in directory \emx\p2c,
+                       rename to system.imp for Modula-2
+.\os2\turbo.imp     -- place in directory \emx\p2c
+
+------------------------------------------------------
+for HP PASCAL Workstation System users only:
+
+.\hp\import\*.imp   -- place in directory \emx\p2c
+.\hp\include\*.h    -- place in directory \emx\include
+------------------------------------------------------
+
+All other files may be deleted --- they are provided only in order to
+fulfill the conditions imposed by the GNU General Public License.
+
+
+3. Use
+======
+
+A file <name> is translated into a file <name> with added or substituted
+suffix .c.
+
+The C file(s) are then compiled using gcc/emx, and linked to the library
+libp2c.a. For compilation of the C files, the file p2c.h should be
+accessible to the compiler.
+
+Example
+---------------------------------------------------------
+Compile a Turbo-Pascal program prog.pas:
+
+At command line...                      Comments...    
+
+p2c -LTURBO prog.pas                    produces prog.c
+
+gcc -o prog.exe -O2 prog.c -lp2c        produces prog.exe
+---------------------------------------------------------
+
+For further information refer to .\os2\p2c.doc.
+
+
+4. Notes
+========
+
+-H option of p2c does not work. May be a bug in my OS/2 port or in p2c itself.
+Use environment variable P2C_HOME instead.
+
+If you suspect a problem with p2c itself, report it to the author of p2c.
+
+
+5. Comments, complaints, etc. to:
+=================================
+
+Bernt Karasch
+
+Address:  Ruhr-Universitaet Bochum
+          Institut fuer Mineralogie
+          Herrn Bernt Karasch
+          Universitaetsstrasse 150
+          W-4630 Bochum 1
+          Federal Republic of Germany
+
+Internet: hermann.gies@ruba.rz.ruhr-uni-bochum.dbp.de

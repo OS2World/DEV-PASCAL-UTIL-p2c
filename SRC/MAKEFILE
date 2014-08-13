@@ -1,0 +1,105 @@
+# Makefile for "p2c", the Pascal to C translator.
+#  Copyright (C) 1989, 1990, 1991 Free Software Foundation.
+#  Author: Dave Gillespie.
+#  Author's address: daveg@csvax.caltech.edu; 256-80 Caltech/Pasadena CA 91125.
+
+   #######################################################################
+   #                                                                     #
+   #  08-04-1992                                                         #
+   #                                                                     #
+   #  Modified by Bernt Karasch for OS/2 v 2.0 (gcc/emx and nmake)       #
+   #  (Internet : hermann.gies@ruba.rz.ruhr-uni-bochum.dbp.de            #
+   #   Snailmail: Ruhr-Universitaet Bochum, Institut fuer Mineralogie,   #
+   #              Herrn Bernt Karasch, Universitaetsstrasse 150,         #
+   #              W-4630 Bochum 1, Federal Republic of Germany)          #
+   #                                                                     #
+   #######################################################################
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation (any version).
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+
+# Compiler options
+CC = gcc                  
+OPT = -O2		   # for optimization
+DEB = # -g		   # uncomment this for debugging
+DEFS =			   # place other -D types of things here
+CFLAGS = $(OPT) $(DEB) $(DEFS)
+LFLAGS =
+
+
+# Custom translator modules
+CUSTSRCS = hpmods.c citmods.c
+CUSTOBJS = hpmods.o citmods.o
+CUSTDEFS = -DCUST1=hpmods -DCUST2=citmods
+
+
+# File names
+P2CSRCS = trans.c stuff.c out.c comment.c lex.c parse.c decl.c \
+          expr.c pexpr.c funcs.c dir.c
+P2COBJS = stuff.o out.o comment.o lex.o parse.o decl.o \
+          expr.o pexpr.o funcs.o 
+SPECIAL = trans.o dir.o
+
+SRCS = $(P2CSRCS) $(CUSTSRCS)
+OBJS = $(P2COBJS) $(SPECIAL) $(CUSTOBJS) 
+XOBJ = $(P2COBJS) $(CUSTOBJS)
+
+LIBSRCS = p2clib.c locp2clb.c
+LIBOBJS = p2clib.o locp2clb.o
+OTHERLIBOBJS =
+
+MISCSRCS = makeprot.c
+PROTOS = p2c.pro p2c.hdr
+
+
+# Top-level targets
+all: proto p2c libp2c.a 
+proto: $(PROTOS)
+
+
+# Making p2c
+p2c: $(OBJS)
+	$(CC) $(LFLAGS) $(OBJS) -o p2c.exe
+
+dir.o: dir.c trans.h
+	$(CC) -c $(CFLAGS) $(CUSTDEFS) dir.c
+
+trans.o: trans.c trans.h
+	$(CC) -c $(CFLAGS) -DHASDUMPS trans.c
+
+$(XOBJ):
+        $(CC) -c $(CFLAGS) $*.c
+
+
+# Making and using makeproto
+p2c.hdr: $(SRCS) makeprot
+	makeprot -n -m -h -t16 -a35 -s0 -x $(SRCS) -o p2c.hdr
+
+p2c.pro: $(SRCS) makeprot
+	makeprot -n -m -h -t16 -a35 -s1 -i $(SRCS) -o p2c.pro
+
+makeprot: makeprot.c
+	$(CC) $(CFLAGS) $(LFLAGS) makeprot.c -o makeprot.exe
+
+
+# Making the p2c runtime library
+libp2c.a: $(LIBOBJS)
+	ar r libp2c.a $(LIBOBJS) $(OTHERLIBOBJS)
+
+p2clib.o: p2clib.c
+	$(CC) -c $(CFLAGS) p2clib.c
+
+locp2clb.o: locp2clb.c
+	$(CC) -c $(CFLAGS) locp2clb.c
+
